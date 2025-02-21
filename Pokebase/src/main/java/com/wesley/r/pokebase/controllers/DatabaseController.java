@@ -8,6 +8,6 @@ public class DatabaseController {
     private Connection dbConnection;
 
     public DatabaseController() {
-        
+
     }
 }
