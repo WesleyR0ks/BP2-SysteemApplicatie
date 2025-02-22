@@ -16,7 +16,7 @@ public class Start extends Application {
 
         DatabaseController controller = new DatabaseController();
         PokemonController pokemonController = new PokemonController(controller);
-        PokemonOverview overview = new PokemonOverview(stage, controller);
+        PokemonOverview overview = new PokemonOverview(stage, pokemonController);
 
 
     }
