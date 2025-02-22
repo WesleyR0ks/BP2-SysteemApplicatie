@@ -1,5 +1,8 @@
 package com.wesley.r.pokebase;
 
+import com.wesley.r.pokebase.controllers.DatabaseController;
+import com.wesley.r.pokebase.controllers.PokemonController;
+import com.wesley.r.pokebase.screens.PokemonOverview;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -11,10 +14,11 @@ public class Start extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        Scene scene = new Scene(new Pane(), 320, 240);
-        stage.setTitle("Hello!");
-        stage.setScene(scene);
-        stage.show();
+        DatabaseController controller = new DatabaseController();
+        PokemonController pokemonController = new PokemonController(controller);
+        PokemonOverview overview = new PokemonOverview(stage, controller);
+
+
     }
 
     public static void main(String[] args) {

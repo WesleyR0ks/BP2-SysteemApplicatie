@@ -17,4 +17,8 @@ public class DatabaseController {
             throw new RuntimeException(e);
         }
     }
+
+    public Connection getDbConnection() {
+        return dbConnection;
+    }
 }
