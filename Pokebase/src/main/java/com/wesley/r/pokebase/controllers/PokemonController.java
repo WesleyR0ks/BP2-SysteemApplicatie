@@ -1,6 +1,8 @@
 package com.wesley.r.pokebase.controllers;
 
 import com.wesley.r.pokebase.classes.Pokemon;
+import com.wesley.r.pokebase.classes.Type;
+import com.wesley.r.pokebase.classes.Zone;
 import javafx.scene.layout.GridPane;
 
 import java.sql.ResultSet;
@@ -11,6 +13,8 @@ import java.util.ArrayList;
 public class PokemonController {
 
     private ArrayList<Pokemon> pokemonList;
+    private ArrayList<Type> typeList;
+    private ArrayList<Zone> zoneList;
     private DatabaseController databaseController;
     private Statement statement;
 
@@ -56,6 +60,34 @@ public class PokemonController {
 
     public void addPokemon(Pokemon pokemon){
         //Add new Pokemon to database
+        //        INSERT INTO `pokemon`(`pokemonName`, `healthValue`, `attackValue`, `defenseValue`, `speedValue`, `typeID`, `zoneID`) VALUES ('Bulbasaur','45','49','49','45',
+        //        (SELECT typeID FROM type WHERE typeName = 'Grass'),
+        //        (SELECT zoneID FROM zone WHERE zoneName = 'Forest'));
+
+
+        String pokemonName = pokemon.getPokemonName();
+        int healthValue = pokemon.getHealthValue();
+        int attackValue = pokemon.getAttackValue();
+        int defenseValue = pokemon.getDefenseValue();
+        int speedValue = pokemon.getSpeedValue();
+        Type type = pokemon.getType();
+        Zone zone = pokemon.getZone();
+
+        try {
+            statement.execute("INSERT INTO `pokemon`(`pokemonName`, `healthValue`, `attackValue`, `defenseValue`, `speedValue`, `typeID`, `zoneID`) " +
+                    "VALUES ('"+ pokemonName +"'," +
+                    "'" + healthValue + "'," +
+                    "'" + attackValue + "'," +
+                    "'" + defenseValue + "'," +
+                    "'" + speedValue + "'," +
+                    "(SELECT typeID FROM type WHERE typeName = '"+ type.getTypeName() +"')," +
+                    "(SELECT zoneID FROM zone WHERE zoneName = '" + zone.getZoneName() +"'));");
+        } catch (SQLException e) {
+            System.out.println("Couldn't execute insert statement");
+            throw new RuntimeException(e);
+        }
+
+
         pokemonList.add(pokemon);
     }
 
