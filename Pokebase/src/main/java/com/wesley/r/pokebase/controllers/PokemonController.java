@@ -4,6 +4,7 @@ import com.wesley.r.pokebase.classes.Pokemon;
 import com.wesley.r.pokebase.classes.Type;
 import com.wesley.r.pokebase.classes.Zone;
 import com.wesley.r.pokebase.screens.PokemonDetail;
+import com.wesley.r.pokebase.screens.PokemonEdit;
 import com.wesley.r.pokebase.screens.PokemonOverview;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -25,6 +26,8 @@ public class PokemonController {
 
     public PokemonController(DatabaseController databaseController) {
         this.pokemonList = new ArrayList<>(); //Get all data from database to initialise new arraylist
+        this.typeList = new ArrayList<>();
+        this.zoneList = new ArrayList<>();
         this.databaseController = databaseController;
 
         try {
@@ -32,12 +35,39 @@ public class PokemonController {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+        try {
+            ResultSet rs = statement.executeQuery("SELECT * FROM type;");
+            while (rs.next()) {
+                typeList.add(new Type(rs.getInt("typeID"), rs.getString("typeName")));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            ResultSet rs = statement.executeQuery("SELECT * FROM zone;");
+            while (rs.next()) {
+                zoneList.add(new Zone(rs.getInt("zoneID"), rs.getString("zoneName")));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ArrayList<Type> getTypeList(){
+        return typeList;
+    }
+
+    public ArrayList<Zone> getZoneList(){
+        return zoneList;
     }
 
     public GridPane showPokemons(Stage stage){
         //Create a gridpane to show all the pokemons
         GridPane grid = new GridPane();
         grid.setHgap(15);
+        grid.setVgap(5);
         try {
             ResultSet rs = statement.executeQuery("SELECT pokemon.pokemonID, pokemon.pokemonName, type.typeName ,zone.zoneName FROM pokemon LEFT JOIN type ON pokemon.typeID = type.typeID LEFT JOIN zone ON pokemon.zoneID = zone.zoneID;");
             int i2 = 1;
@@ -135,7 +165,7 @@ public class PokemonController {
                 Button btnEdit = new Button("Edit");
                 grid.add(btnEdit, i1, i2);
                 btnEdit.setOnAction(e -> {
-
+                    PokemonEdit pokemonEdit = new PokemonEdit(new Stage(), this, pokemonId);
                 });
                 i1++;
                 Button btnDelete = new Button("Delete");
@@ -197,8 +227,19 @@ public class PokemonController {
         pokemonList.add(pokemon);
     }
 
-    public void editPokemon (int pokemonId ,Pokemon pokemon){
+    public void editPokemon (int pokemonId, Pokemon pokemon){
         //Edit the Pokemon connected to the given ID with the data from the given Pokemon
+        String pokemonName = pokemon.getPokemonName();
+        int healthValue = pokemon.getHealthValue();
+        int attackValue = pokemon.getAttackValue();
+        int defenseValue = pokemon.getDefenseValue();
+        int speedValue = pokemon.getSpeedValue();
+        Type type = pokemon.getType();
+        Zone zone = pokemon.getZone();
+
+
+
+
 
     }
 

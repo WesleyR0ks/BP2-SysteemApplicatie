@@ -22,6 +22,17 @@ public class Pokemon {
         this.zone = zone;
     }
 
+    public Pokemon(String pokemonName, int healthValue, int attackValue, int defenseValue, int speedValue, Type type, Zone zone) {
+        this.pokemonId = 0;
+        this.pokemonName = pokemonName;
+        this.healthValue = healthValue;
+        this.attackValue = attackValue;
+        this.defenseValue = defenseValue;
+        this.speedValue = speedValue;
+        this.type = type;
+        this.zone = zone;
+    }
+
     public int getPokemonId() {
         return pokemonId;
     }
