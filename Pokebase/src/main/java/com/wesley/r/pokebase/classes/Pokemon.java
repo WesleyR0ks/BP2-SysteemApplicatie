@@ -1,5 +1,8 @@
 package com.wesley.r.pokebase.classes;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class Pokemon {
 
     private int pokemonId;
@@ -31,6 +34,16 @@ public class Pokemon {
         this.speedValue = speedValue;
         this.type = type;
         this.zone = zone;
+    }
+
+    public Pokemon (ResultSet rs) throws SQLException {
+        this.pokemonId = rs.getInt("pokemonId");
+        this.pokemonName = rs.getString("pokemonName");
+        this.healthValue = rs.getInt("healthValue");
+        this.attackValue = rs.getInt("attackValue");
+        this.defenseValue = rs.getInt("defenseValue");
+        this.speedValue = rs.getInt("speedValue");
+
     }
 
     public int getPokemonId() {

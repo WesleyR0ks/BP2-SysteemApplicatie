@@ -127,9 +127,7 @@ public class PokemonController {
         });
 
         try {
-            ResultSet rs = statement.executeQuery("SELECT pokemon.pokemonID, pokemon.pokemonName, pokemon.healthValue, pokemon.attackValue, pokemon.defenseValue, pokemon.speedValue, type.typeName, zone.zoneName FROM `pokemon`\n" +
-                    "LEFT JOIN type ON pokemon.typeID = type.typeID LEFT JOIN zone ON pokemon.zoneID = zone.zoneID\n" +
-                    "WHERE pokemonID = '" + pokemonId + "';");
+            ResultSet rs = getPokemonResultSet(pokemonId);
             int i2 = 1;
             int i1 = 0;
             grid.add(new Label("Pokemon Name:"), i1, i2);
@@ -166,32 +164,71 @@ public class PokemonController {
                 grid.add(btnEdit, i1, i2);
                 btnEdit.setOnAction(e -> {
                     PokemonEdit pokemonEdit = new PokemonEdit(new Stage(), this, pokemonId);
+                    stage.close();
                 });
                 i1++;
                 Button btnDelete = new Button("Delete");
                 grid.add(btnDelete, i1, i2);
                 btnDelete.setOnAction(e -> {
-
+                    deletePokemon(pokemonId);
+                    PokemonOverview pokemonOverview = new PokemonOverview(new Stage(), this);
+                    stage.close();
                 });
-
                 i2++;
             }
-
         } catch (SQLException e) {
             System.out.println("Couldn't execute statement");
             throw new RuntimeException(e);
         }
 
-
-
-
-
         return grid;
     }
 
     public Pokemon getPokemon(int pokemonId){
+        Pokemon pokemon = null;
+        ResultSet rs = getPokemonResultSet(pokemonId);
+        try {
+            while (rs.next()) {
+                Type foundType = null;
+                for (Type type : getTypeList()){
+                    if (type.getTypeName().equals(rs.getString("typeName"))) {
+                        foundType = type;
+                    }
+                }
+
+                Zone foundZone = null;
+                for (Zone zone : getZoneList()){
+                    if (zone.getZoneName().equals(rs.getString("zoneName"))) {
+                        foundZone = zone;
+                    }
+                }
+
+                pokemon = new Pokemon(rs.getInt("pokemonID"),
+                        rs.getString("pokemonName"),
+                        rs.getInt("healthValue"),
+                        rs.getInt("attackValue"),
+                        rs.getInt("defenseValue"),
+                        rs.getInt("speedValue"),
+                        foundType,
+                        foundZone);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return pokemon;
+    }
+
+    public ResultSet getPokemonResultSet(int pokemonId) {
         //Get Pokemon from database using the ID given
-        return pokemonList.get(pokemonId);
+        ResultSet rs;
+        try {
+            rs = statement.executeQuery("SELECT pokemon.pokemonID, pokemon.pokemonName, pokemon.healthValue, pokemon.attackValue, pokemon.defenseValue, pokemon.speedValue, pokemon.typeID, type.typeName, pokemon.zoneID, zone.zoneName FROM `pokemon`\n" +
+                    "LEFT JOIN type ON pokemon.typeID = type.typeID LEFT JOIN zone ON pokemon.zoneID = zone.zoneID\n" +
+                    "WHERE pokemonID = '" + pokemonId + "';");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return rs;
     }
 
     public void addPokemon(Pokemon pokemon){
@@ -238,14 +275,29 @@ public class PokemonController {
         Zone zone = pokemon.getZone();
 
 
-
-
-
+        try {
+            statement.execute("UPDATE `pokemon` " +
+                    "SET `pokemonName`='"+ pokemonName +"'," +
+                    "`healthValue`='"+ healthValue +"'," +
+                    "`attackValue`='"+ attackValue +"'," +
+                    "`defenseValue`='"+ defenseValue +"'," +
+                    "`speedValue`='"+ speedValue +"'" +
+                    "WHERE `pokemonID` = '"+ pokemonId +"';");
+        } catch (SQLException e) {
+            System.out.println("Couldn't execute update statement");
+            throw new RuntimeException(e);
+        }
     }
 
     public void deletePokemon (int pokemonId){
         //Delete the Pokemon connected to the given ID
-
+        //DELETE FROM `pokemon` WHERE `pokemonID` = pokemonId
+        try {
+            statement.execute("DELETE FROM `pokemon` WHERE `pokemonID` = '"+ pokemonId +"';");
+        } catch (SQLException e) {
+            System.out.println("Couldn't execute update statement");
+            throw new RuntimeException(e);
+        }
     }
 
 }
