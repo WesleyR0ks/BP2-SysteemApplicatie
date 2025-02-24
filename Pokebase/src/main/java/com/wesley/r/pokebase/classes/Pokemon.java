@@ -37,7 +37,7 @@ public class Pokemon {
     }
 
     public Pokemon (ResultSet rs) throws SQLException {
-        this.pokemonId = rs.getInt("pokemonId");
+        this.pokemonId = rs.getInt("pokemonID");
         this.pokemonName = rs.getString("pokemonName");
         this.healthValue = rs.getInt("healthValue");
         this.attackValue = rs.getInt("attackValue");
