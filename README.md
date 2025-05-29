@@ -1,6 +1,6 @@
 <h1>READ ME</h1>
 <h2>Welkom</h2>
-Welkom bij mijn README voor mijn Systeem Applicatie: **Pokebase**  
+Welkom bij mijn README voor mijn Systeem Applicatie: <b>Pokebase</b>  
 Deze applicatie is gemaakt om verschillende Pokémons op te slaan met allerlei verschillende informatie over de Pokémon.
 
 <h2>Gebruik</h2>
