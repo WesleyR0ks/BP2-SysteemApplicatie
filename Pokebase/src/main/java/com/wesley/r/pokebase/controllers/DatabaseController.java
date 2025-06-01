@@ -27,6 +27,15 @@ public class DatabaseController {
         }
 
     }
+    // For testing
+    void setDbConnection(Connection connection) {
+        this.dbConnection = connection;
+    }
+
+    //For testing
+    void setStatement(Statement statement) {
+        this.statement = statement;
+    }
 
     public Connection getDbConnection() {
         return dbConnection;
